@@ -72,15 +72,9 @@ while cap.isOpened():
         l_elbow_x, l_elbow_y = get_landmark_coordinates(results.pose_landmarks, mp_pose.PoseLandmark.LEFT_ELBOW.value) # Need Elbow
         l_wrist_x, l_wrist_y = get_landmark_coordinates(results.pose_landmarks, mp_pose.PoseLandmark.LEFT_WRIST.value)
     
-        # Calculate Distances for Jabs
         r_dist = calculate_distance(r_shoulder_x, r_shoulder_y, r_wrist_x, r_wrist_y)
         l_dist = calculate_distance(l_shoulder_x, l_shoulder_y, l_wrist_x, l_wrist_y)
 
-        # ==========================================================
-        # 🥊 JAB DETECTION (Horizontal Extension)
-        # ==========================================================
-        
-        # RIGHT HAND DATA -> LEFT COUNTER (Mirror)
         if r_arm_ready:
             if r_dist > punch_threshold and r_wrist_y < (r_shoulder_y + raised_threshold):
                 l_jab_count += 1
@@ -89,7 +83,7 @@ while cap.isOpened():
             if r_dist < reset_threshold:
                 r_arm_ready = True
         
-        # LEFT HAND DATA -> RIGHT COUNTER (Mirror)
+        
         if l_arm_ready:
             if l_dist > punch_threshold and l_wrist_y < (l_shoulder_y + raised_threshold):
                 r_jab_count += 1
@@ -101,7 +95,7 @@ while cap.isOpened():
         if r_upper_ready:
             if (r_wrist_y < nose_y and 
                 r_elbow_y > r_shoulder_y and 
-                r_dist < punch_threshold): # Ensure it's not a jab
+                r_dist < punch_threshold): 
                 
                 l_upper_count += 1
                 r_upper_ready = False
@@ -137,4 +131,5 @@ while cap.isOpened():
 
 cap.release()
 cv2.destroyAllWindows()
+
 pose.close()
